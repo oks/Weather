@@ -21,13 +21,13 @@ public enum WeatherData {
 
 extension WeatherData: TargetType {
     public var sampleData: Data {
-        return Data() // TODO:
+        return Data() // HACK: -
     }
     
     public var headers: [String : String]? {
         return [:]
     }
-    
+ 
     public var baseURL: URL { return URL(string: "https://api.openweathermap.org/data/2.5")! }
     
     public var path: String {
@@ -49,11 +49,3 @@ extension WeatherData: TargetType {
         }
     }
 }
-
-
-
-//api.openweathermap.org/data/2.5/weather?lat=35&lon=139
-
-
-
-

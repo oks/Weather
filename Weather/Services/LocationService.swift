@@ -20,7 +20,7 @@ class LocationService: NSObject {
         super.init()
         locationManager.delegate = self
     }
-    
+ 
     func load(completion: @escaping LocationCompletion) {
         self.completion = completion
         

@@ -20,6 +20,15 @@ class MainVC: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        title = "Map"
+     
+        // HACK: -
+        _ = StorageService.loadData()
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem.init(title: "Offline",
+                                                                 style: .plain,
+                                                                 target: self,
+                                                                 action: #selector(presentOfflineScreen))
         setupView()
         addDoubleTapHandling()
         
@@ -33,6 +42,11 @@ class MainVC: UIViewController {
         }
     }
     
+    @objc func presentOfflineScreen() {
+        let models = StorageService.loadData()
+        navigationController?.pushViewController(OfflineListVC(models: models), animated: true)
+    }
+    
     func setupView() {
         view.addSubview(mapView)
         mapView.isZoomEnabled = false
@@ -44,8 +58,6 @@ class MainVC: UIViewController {
     func addDoubleTapHandling() {
         let gesture = UITapGestureRecognizer.init(target: self, action: #selector(gestureAction))
         gesture.numberOfTapsRequired = 2
-        gesture.cancelsTouchesInView = true
-        gesture.delegate = self
         mapView.addGestureRecognizer(gesture)
         tap = gesture
     }
@@ -64,25 +76,7 @@ class MainVC: UIViewController {
     }
     
     func centerMapOnLocation(_ location: CLLocationCoordinate2D) {
-        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location, 1000, 1000)
+        let coordinateRegion = MKCoordinateRegionMakeWithDistance(location, 10000, 10000)
         mapView.setRegion(coordinateRegion, animated: true)
     }
-}
-
-extension MainVC: UIGestureRecognizerDelegate {
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRequireFailureOf otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        
-        if gestureRecognizer == tap {
-            return false
-        } else {
-            return true
-        }
-    }
-    
-    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer,
-                           shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
-        return true
-    }
-    
 }
